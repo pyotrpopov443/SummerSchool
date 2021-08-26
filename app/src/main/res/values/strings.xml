@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Summer School</string>
+
+    <string name="title_news">News</string>
+    <string name="title_schedule">Schedule</string>
+    <string name="title_info">Info</string>
+    <string name="title_map">Maps</string>
+    <string name="title_settings">Settings</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
