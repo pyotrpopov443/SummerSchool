@@ -3,12 +3,13 @@ package pyotr.popov443.summerschool.ui.schedule
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseExpandableListAdapter
+import pyotr.popov443.summerschool.AnimatedExpandableListView
 import pyotr.popov443.summerschool.data.models.Event
 import pyotr.popov443.summerschool.databinding.GroupScheduleBinding
 import pyotr.popov443.summerschool.databinding.ItemScheduleBinding
 
-class ExpandableScheduleAdapter(events: List<Event>) : BaseExpandableListAdapter() {
+class ExpandableScheduleAdapter(events: List<Event>) :
+    AnimatedExpandableListView.AnimatedExpandableListAdapter() {
 
     private val schedule = linkedMapOf<String, MutableList<Event>>().apply {
         events.forEach {
@@ -27,7 +28,7 @@ class ExpandableScheduleAdapter(events: List<Event>) : BaseExpandableListAdapter
 
     override fun getGroupCount() = days.size
 
-    override fun getChildrenCount(groupPosition: Int) = schedule[days[groupPosition]]!!.size
+    override fun getRealChildrenCount(groupPosition: Int) = schedule[days[groupPosition]]!!.size
 
     override fun getGroup(groupPosition: Int) = schedule[days[groupPosition]]
 
@@ -51,7 +52,7 @@ class ExpandableScheduleAdapter(events: List<Event>) : BaseExpandableListAdapter
         return binding.root
     }
 
-    override fun getChildView(
+    override fun getRealChildView(
         groupPosition: Int,
         childPosition: Int,
         isLastChild: Boolean,

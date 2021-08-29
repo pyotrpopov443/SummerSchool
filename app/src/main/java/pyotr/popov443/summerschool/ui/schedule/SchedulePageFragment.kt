@@ -2,10 +2,8 @@ package pyotr.popov443.summerschool.ui.schedule
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import pyotr.popov443.summerschool.R
 import pyotr.popov443.summerschool.data.models.Event
@@ -20,6 +18,14 @@ class SchedulePageFragment(private var events: List<Event> = listOf()) : Fragmen
         val savedList = savedInstanceState?.getParcelableArrayList<Event>("events")
         if (savedList != null) events = savedList
         binding.expandableSchedule.setAdapter(ExpandableScheduleAdapter(events))
+
+        binding.expandableSchedule.setOnGroupClickListener { _, _, groupPosition, _ ->
+            if (binding.expandableSchedule.isGroupExpanded(groupPosition))
+                binding.expandableSchedule.collapseGroupWithAnimation(groupPosition)
+            else
+                binding.expandableSchedule.expandGroupWithAnimation(groupPosition)
+        }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
