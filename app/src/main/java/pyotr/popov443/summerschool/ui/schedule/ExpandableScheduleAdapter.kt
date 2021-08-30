@@ -41,27 +41,27 @@ class ExpandableScheduleAdapter(events: List<Event>) :
     override fun hasStableIds() = false
 
     override fun getGroupView(
-        groupPosition: Int,
-        isExpanded: Boolean,
-        convertView: View?,
-        parent: ViewGroup?
+            groupPosition: Int,
+            isExpanded: Boolean,
+            convertView: View?,
+            parent: ViewGroup?
     ): View {
-        val inflater = LayoutInflater.from(parent!!.context)
+        val inflater = LayoutInflater.from(parent?.context)
         val binding = GroupScheduleBinding.inflate(inflater, parent, false)
         binding.groupName.text = days[groupPosition]
         return binding.root
     }
 
     override fun getRealChildView(
-        groupPosition: Int,
-        childPosition: Int,
-        isLastChild: Boolean,
-        convertView: View?,
-        parent: ViewGroup?
+            groupPos: Int,
+            childPos: Int,
+            isLastChild: Boolean,
+            convertView: View?,
+            parent: ViewGroup?
     ): View {
-        val inflater = LayoutInflater.from(parent!!.context)
+        val inflater = LayoutInflater.from(parent?.context)
         val binding = ItemScheduleBinding.inflate(inflater, parent, false)
-        binding.itemName.text = getChild(groupPosition, childPosition).toString()
+        binding.itemName.text = getChild(groupPos, childPos).toString()
         return binding.root
     }
 

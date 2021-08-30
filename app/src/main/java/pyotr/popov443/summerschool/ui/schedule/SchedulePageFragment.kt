@@ -25,7 +25,6 @@ class SchedulePageFragment(private var events: List<Event> = listOf()) : Fragmen
             else
                 binding.expandableSchedule.expandGroupWithAnimation(groupPosition)
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -34,14 +33,7 @@ class SchedulePageFragment(private var events: List<Event> = listOf()) : Fragmen
     }
 
     override fun onResume() {
-        //this updates adapter
-        if (binding.expandableSchedule.isGroupExpanded(0)) {
-            binding.expandableSchedule.collapseGroup(0)
-            binding.expandableSchedule.expandGroup(0)
-        } else {
-            binding.expandableSchedule.expandGroup(0)
-            binding.expandableSchedule.collapseGroup(0)
-        }
+        binding.expandableSchedule.requestLayout()
         super.onResume()
     }
 
