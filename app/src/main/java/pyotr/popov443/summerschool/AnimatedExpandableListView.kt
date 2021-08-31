@@ -1,17 +1,19 @@
 package pyotr.popov443.summerschool
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.SparseArray
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.Transformation
-import android.widget.BaseExpandableListAdapter
-import android.widget.ExpandableListAdapter
-import android.widget.ExpandableListView
+import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
 import java.util.*
 
 class AnimatedExpandableListView(context: Context, attrs: AttributeSet) :
@@ -68,6 +70,8 @@ class AnimatedExpandableListView(context: Context, attrs: AttributeSet) :
 
         fun setParent(parent: AnimatedExpandableListView) = this.also { it.parent = parent }
 
+        abstract fun getRealGroupView(groupPosition: Int, isExpanded: Boolean,
+                                      convertView: View?, parent: ViewGroup?): View
         abstract fun getRealChildView(groupPos: Int, childPos: Int, isLastChild: Boolean,
                                       convertView: View?, parent: ViewGroup?): View
         abstract fun getRealChildrenCount(groupPosition: Int): Int
@@ -146,6 +150,7 @@ class AnimatedExpandableListView(context: Context, attrs: AttributeSet) :
                         notifyDataSetChanged()
                         dummyView.tag = STATE_IDLE
                     }
+
                     override fun onAnimationRepeat(animation: Animation) {}
                     override fun onAnimationStart(animation: Animation) {}
                 })
@@ -163,6 +168,7 @@ class AnimatedExpandableListView(context: Context, attrs: AttributeSet) :
                         info.dummyHeight = -1
                         dummyView.tag = STATE_IDLE
                     }
+
                     override fun onAnimationRepeat(animation: Animation) {}
                     override fun onAnimationStart(animation: Animation) {}
                 })
@@ -170,6 +176,25 @@ class AnimatedExpandableListView(context: Context, attrs: AttributeSet) :
                 dummyView.tag = STATE_COLLAPSING
             }
             return convertV
+        }
+
+        override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
+            this.parent!!.setGroupIndicator(null)
+            val info = getGroupInfo(groupPosition)
+            val realGroupView = getRealGroupView(groupPosition, isExpanded, convertView, parent)
+            val groupView = LayoutInflater.from(this.parent!!.context)
+                    .inflate(R.layout.expandable_view_group, parent, false) as ConstraintLayout
+            groupView.addView(realGroupView)
+            val arrow = groupView.findViewById<ImageView>(R.id.group_indicator)
+            arrow.rotation = if (isExpanded && !info.animating) 180f else 0f
+
+            if (!info.animating) return groupView
+            val currentAngle = arrow.rotation
+            val targetAngle = if (info.expanding) 180f else 0f
+            val rotateAnimation = ObjectAnimator.ofFloat(arrow, "rotation", 180f-targetAngle, targetAngle)
+            rotateAnimation.duration = 300
+            rotateAnimation.start()
+            return groupView
         }
 
         override fun getChildrenCount(groupPosition: Int): Int {
@@ -228,8 +253,8 @@ class AnimatedExpandableListView(context: Context, attrs: AttributeSet) :
         }
     }
 
-    private class ExpandAnimation (val view: View, val baseHeight: Int,
-                                   endHeight: Int, val groupInfo: GroupInfo) : Animation() {
+    private class ExpandAnimation(val view: View, val baseHeight: Int,
+                                  endHeight: Int, val groupInfo: GroupInfo) : Animation() {
 
         private val delta = endHeight - baseHeight
 

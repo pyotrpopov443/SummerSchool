@@ -40,7 +40,7 @@ class ExpandableScheduleAdapter(events: List<Event>) :
 
     override fun hasStableIds() = false
 
-    override fun getGroupView(
+    override fun getRealGroupView(
             groupPosition: Int,
             isExpanded: Boolean,
             convertView: View?,
